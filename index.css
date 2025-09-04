@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@#$#@&!_123_@#$#@&!</title>
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ctext x='0' y='14' font-size='16' font-weight='bold' font-family='sans-serif'%3E%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --primary-blue: #adadad;
+      --primary-blue-hover: #666666;
+      --shadow-light: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      --shadow-dark: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      --border-light: 1px solid rgba(255, 255, 255, 0.18);
+      --border-dark: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+    body.light { background: #f4f7f9; color: #333; }
+    body.dark { background: #121212; color: #f1f1f1; }
+    .container {
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      padding: 25px;
+      border-radius: 20px;
+      position: relative;
+    }
+    body.light .container {
+        background: rgba(255, 255, 255, 0.9);
+        box-shadow: var(--shadow-light);
+        border: var(--border-light);
+    }
+    body.dark .container {
+        background: rgba(28, 28, 28, 0.75);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-dark);
+        border: var(--border-dark);
+    }
+    h1 { font-size: 2.2rem; margin-bottom: 25px; }
+    .input-group {
+        display: flex;
+        gap: 10px;
+    }
+    .input-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+    .input-box {
+      width: 100%;
+      padding-right: 80px;
+    }
+    .clear-btn, .paste-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #888;
+        padding: 5px;
+        line-height: 1;
+    }
+    .clear-btn { right: 12px; display: none; }
+    .paste-btn { right: 40px; }
+    .clear-btn:hover, .paste-btn:hover { color: #333; }
+    body.dark .clear-btn, body.dark .paste-btn { color: #aaa; }
+    body.dark .clear-btn:hover, body.dark .paste-btn:hover { color: #fff; }
+    select, .input-box, button {
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      transition: 0.2s;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    select { width: 100%; margin-bottom: 15px; }
+    .input-box { width: 100%; }
+    body.dark select, body.dark .input-box {
+      background: #333;
+      color: #f1f1f1;
+      border: 1px solid #444;
+    }
+    body.light select, body.light .input-box {
+      background: #fff;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    button {
+      background: var(--primary-blue);
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      flex-grow: 1;
+    }
+    button.process-btn { width: 100%; margin-top: 15px; }
+    button:hover { background: var(--primary-blue-hover); transform: translateY(-2px); box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); }
+    button:active { transform: translateY(0); box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2); }
+    .output-container { position: relative; margin-top: 20px; }
+    .output-box {
+      padding: 15px;
+      border-radius: 12px;
+      word-wrap: break-word;
+      min-height: 60px;
+      text-align: left;
+      width: 100%;
+      padding-right: 45px;
+    }
+    body.dark .output-box { background: rgba(0,0,0,0.3); color: #fff; border: 1px solid #444; }
+    body.light .output-box { background: #f0f0f0; color: #111; border: 1px solid #ddd; }
+    .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #555;
+        color: #fff;
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: none;
+    }
+    body.light .copy-btn { background: #e0e0e0; color: #333; }
+    .copy-btn:hover { opacity: 0.8; transform: scale(1.05); }
+    .copy-btn:active { transform: scale(1); }
+    .settings-btn {
+      position: fixed; top: 15px; right: 15px; background: #444; border-radius: 50%; width: 40px; height: 40px;
+      display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-size: 1.3rem;
+      z-index: 1100; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    body.light .settings-btn { background-color: #fff; color: #333; }
+    .settings-btn:hover { transform: scale(1.1); }
+    .settings-panel {
+      display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      padding: 20px; border-radius: 12px; z-index: 1000; width: 300px;
+    }
+    body.dark .settings-panel { background: #2c2c2c; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+    body.light .settings-panel { background: #fdfdfd; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+    .settings-panel.active { display: block; }
+    .settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .settings-panel .settings-item { margin-top: 15px; }
+    .settings-panel button, .settings-panel input { width: 100%; box-shadow: none; }
+    .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        z-index: 2000;
+        opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        pointer-events: none;
+    }
+    .toast-notification.show {
+        opacity: 1;
+        transform: translate(-50%, -10px);
+    }
+    .burger-btn {
+        position: fixed; top: 15px; left: 15px; background: #444; border-radius: 50%; width: 40px; height: 40px;
+        display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-size: 1.3rem;
+        z-index: 1100; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    }
+    body.light .burger-btn { background-color: #fff; color: #333; }
+    .burger-btn:hover { transform: scale(1.1); }
+    .history-panel {
+        display: none; position: fixed; top: 0; left: 0; width: 300px; height: 100%;
+        z-index: 999; padding: 20px; overflow-y: auto;
+    }
+    body.dark .history-panel { background: #2c2c2c; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
+    body.light .history-panel { background: #fdfdfd; box-shadow: 0 0 20px rgba(0,0,0,0.2); }
+    .history-panel.active { display: block; }
+    .history-header {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 15px;
+    }
+    .history-panel h3 { margin: 0; }
+    .history-item {
+        border-bottom: 1px solid #444; padding: 10px 0;
+    }
+    body.light .history-item { border-bottom: 1px solid #ddd; }
+    .history-item p { margin: 5px 0; }
+    .history-item .input-text { font-style: italic; opacity: 0.8; }
+    .history-item .output-text { font-weight: bold; }
+    .loading-text {
+        font-size: 1.2rem;
+        margin-top: 15px;
+        display: none;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <div class="burger-btn" onclick="toggleHistory()">☰</div>
+  <div class="settings-btn" onclick="toggleSettings()">⚙️</div>
+  <div class="toast-notification" id="toast">Hasil tersalin!</div>
+
+  <div class="container">
+    <h1>Put that sh!t here !diots...</h1>
+    <select id="mode">
+      <option value="encode">Encrypt (Text to Code)</option>
+      <option value="decode">Decrypt (Code to Text)</option>
+    </select>
+    <div class="input-wrapper">
+      <input id="inputText" class="input-box" placeholder="Enter text or code here...">
+      <button id="clearBtn" class="clear-btn" onclick="clearFields()">×</button>
+      <button id="pasteBtn" class="paste-btn" onclick="pasteText()">📋</button>
+    </div>
+    <button onclick="processText()" class="process-btn">Process</button>
+    <div id="loadingText" class="loading-text">Processing...</div>
+    <div id="outputContainer" class="output-container" style="display:none;">
+      <div id="output" class="output-box"></div>
+      <button class="copy-btn" onclick="copyOutput()" title="Copy to Clipboard">📋</button>
+    </div>
+  </div>
+
+  <div id="settingsPanel" class="settings-panel">
+    <div class="settings-header">
+      <h3>Settings</h3>
+    </div>
+    <div class="settings-item">
+      <button onclick="toggleTheme()">Toggle Dark/Light Theme</button>
+    </div>
+    <div class="settings-item">
+      <input type="text" id="bgUrl" class="input-box" placeholder="Enter background image URL...">
+      <button onclick="setBackground()" style="margin-top: 10px;">Set Background</button>
+    </div>
+    <div class="settings-item">
+      <button onclick="resetBackground()">Reset Background</button>
+    </div>
+  </div>
+
+  <div id="historyPanel" class="history-panel">
+    <div class="history-header">
+        <h3>History</h3>
+    </div>
+    <div id="historyContent"></div>
+    <div class="settings-item">
+      <button onclick="clearHistory()">Clear History</button>
+    </div>
+  </div>
+
+  <script>
+    const kamus = {
+      // Huruf dan Kata Dasar
+      "a": "a_1", "b": "b-2", "c": "c-3", "d": "d_4", "e": "e#5", "f": "f$6", "g": "g@7", "h": "h&8", "i": "i!9", "j": "j^0", "k": "k~1", "l": "l<2", "m": "m>3", "n": "n%4", "o": "o*5", "p": "p-6", "q": "q_7", "r": "r#8", "s": "s$9", "t": "t@0", "u": "u&1", "v": "v!2", "w": "w^3", "x": "x~4", "y": "y<5", "z": "z>6",
+      "ada": "*_@1", "adalah": "$#&!2", "akhir": "^$!7", "akhirnya": "*/_&!",
+      "akan": "@_K$3", "aku": "#@&K!", "berani": "!#&@B", "pintar": "$%#@P",
+      "bagus": "#@!%B", "jelek": "&*!@J", "cepat": "^$@!C", "lambat": "!@#$L",
+      "sehat": "#$!@S", "sakit": "&*!@S", "panjang": "$%^#P", "pendek": "*!@#P",
+      "besar": "#$!%B", "kecil": "&!@#K", "depan": "$#@!D", "belakang": "%!@#B",
+      "kanan": "$!@#K", "kiri": "*!#@K", "atas": "%@#A", "bawah": "^!@B",
+      "malam": "M!@#", "pagi": "!@P#", "siang": "$!#S", "sore": "*!@S",
+      "terima": "$#&T", "kasih": "@#&K", "maaf": "M!F#", "tolong": "T!@L",
+      "kemarin": "K!@#M", "hari": "H!R$", "rumah": "R!@#M",
+      "sekolah": "S!#@K", "kantor": "K!@#N", "pasar": "P!@#S",
+      "toko": "T!@#K", "uang": "U!@#G", "mahal": "M!@#H", "murah": "M!@#R",
+      "tulis": "T!@#L", "baca": "B!@#C", "jalan": "J!@#L", "makan": "M!@#K",
+      "minum": "M!@#N", "kerja": "K!@#J", "tidur": "T!@#D",
+      "dengar": "D!@#N", "lihat": "L!@#H", "rasa": "R!@#S", "pikir": "P!@#K",
+      "mengubah": "#@*&^%", "membuat": "$!&@*", "menjadi": "_#*&$",
+      "mungkin": "$%_#$", "pada": "@!P_", "saya": "_#Y$",
+      "sekarang": "#$@&_!_#", "sudah": "&%_!*", "tentang": "*@#&_T!",
+      "yang": "@_Y@&",
+
+      // Kata sambung dan tata bahasa
+      "dan": "d@n!", "atau": "a!@u^", "karena": "k*r!N@",
+      "sehingga": "s!h!Ng^", "jika": "j!k@#", "maka": "m@k^!",
+      "meskipun": "m_sk!pUn", "walaupun": "wLp_n", "supaya": "s!p@y^",
+      "agar": "aG@r$", "untuk": "uNt*k", "dengan": "d!n!g^n",
+      "tanpa": "t@np!", "selain": "s!L@!N", "bersama": "b!s@m^",
+      "terhadap": "t!rh@d^p", "sebagai": "s!b@g@i",
+      "seperti": "s!p3rt!", "bahkan": "b@hk!n", "melainkan": "m!l@!nkN",
+      "bukan": "b!k@N", "hanya": "h@Ny^", "saja": "s@j!$",
+      "pun": "p!n_", "juga": "j!g^", "pula": "p!L@", "lagi": "l@g!#",
+      "sekali": "s!k@l!", "sangat": "s@nG!t", "amat": "a!m@t",
+      "terlalu": "t!rL@lu", "begitu": "b!g!tU", "demikian": "d!m!k!@n",
+      "di": "d!*", "ke": "k!@", "dari": "d#r!*",
+
+      // Kata Sehari-hari yang sering digunakan
+      "halo": "h@lo!", "kalian": "k@L!@n", "ngapain": "nG!p@!n",
+      "disini": "d!s!n!", "apa": "k*5?", "apakah": "k@1$?",
+      "gimana": "g!m#n1", "kenapa": "kn!&pA", "bagaimana": "b@g_M!N",
+      "siapa": "s!_p@", "siapapun": "s!_p@1", "kemana": "k!m@N^",
+      "dimana": "d!m@n_", "kapan": "k!p@n$", "belum": "bL!m$",
+      "nanti": "n@!nT1", "tapi": "t#p!*", "oke": "oK#e!",
+      "iya": "iY@&", "tidak": "tD!_@k", "mau": "m@u*", "bisa": "b!s@!",
+      "punya": "p!nY@$", "kamu": "k!@m!u", "dia": "d!@*", "kita": "k!t@#",
+      "mereka": "m!r@k$", "apa-apa": "k*5?-k*5?", "apa-apaan": "k*5?-paaN",
+      "sekarang": "#$@&_!_#",
+
+      // Kata Kerja (Verba)
+      "memiliki": "m!m!l!k!", "mendapatkan": "m!nd!p!tk!n", "memberi": "m!mb!r!",
+      "mengambil": "m!ng@mb!l", "menemukan": "m!n!m!k!n", "menyimpan": "m!ny!mp@n",
+      "menggunakan": "m!ngg!n@k!n", "memulai": "m!m!l@!", "menyelesaikan": "m!ny!l!s@ik!n",
+      "menolong": "m!n!l!nG", "membantu": "m!mb!ntu", "merawat": "m!r@w@t",
+      "menjaga": "m!nj!g@", "menghancurkan": "m!ngh@nc!rk!n",
+      "membangun": "m!mb@ng!n", "mendengarkan": "m!nd!ng@rk!n",
+      "mencium": "m!nc!um", "merasakan": "m!r@s@k!n",
+      "duduk": "d!D!k", "berdiri": "b!rd!r!", "berbaring": "b!rb!r!ng",
+      "jatuh": "j!t!h", "terbang": "t!rb@ng", "berenang": "b!r!n@ng",
+      "mengemudi": "m!ng!m!d!", "membawa": "m!mb@wA", "memakai": "m!m@k@!",
+      "melepas": "m!l!p@s", "mencuci": "m!nc!c!", "memasak": "m!m@s@k",
+      "makan": "m@k@n", "minum": "m!n!m", "membayar": "m!mb@y@r",
+      "menjual": "m!nj!@l", "membeli": "m!mb!l!", "bekerja": "b!k!rjA",
+      "belajar": "b!l!j@r", "mengajar": "m!ng@j@r", "menulis": "m!n!l!s",
+      "membaca": "m!mb@c@", "berpikir": "b!rp!k!r", "mengerti": "m!ng!rt!",
+      "percaya": "p!rc@yA", "tahu": "t@h!u", "lupa": "l!p@!", "ingat": "i!ng@t",
+      "menunggu": "m!n!nggu", "datang": "d@t!ng", "pergi": "p!rg!",
+      "pulang": "p!l@ng", "tiba": "t!b@!", "kembali": "k!mb@l!",
+      "hadir": "h@d!r", "absen": "a!bs!n", "bertambah": "b!rt!mb!h",
+      "berkurang": "b!rk!r!ng", "memotong": "m!m!t!ng", "menambah": "m!n!mb@h",
+      "mengurangi": "m!ng!r!ng!", "mendorong": "m!nd!r!ng", "menarik": "m!n!r!k",
+
+      // Kata Benda (Nomina)
+      "dunia": "d!N!a", "manusia": "m@n!siA", "pemerintah": "p_m!r!nt#",
+      "negara": "n!g^ra", "masyarakat": "m@sy!r#k@t", "kota": "kO!tA",
+      "desa": "d!S@", "bumi": "b!M!i", "langit": "l@nG!T",
+      "matahari": "m!t@h@r!", "bulan": "b!L@n", "bintang": "b!nt@nG",
+      "air": "a!R", "api": "aP!i", "angin": "aNg!n", "tanah": "t@n#h",
+      "makanan": "m!k@Nn!", "minuman": "m!n!m@N", "pakaian": "p@k!An",
+      "hewan": "h!w@N", "tumbuhan": "t!mb!h@n", "transportasi": "t_r@nsP!rt!s!",
+      "sejarah": "s!j@R#h", "ilmu": "iLm!", "pengetahuan": "p!n!g!t@Hn",
+      "teknologi": "t!k-n!l!g!", "seni": "s!N!i", "musik": "m!S!k",
+      "olahraga": "oL!hr@gA", "kesehatan": "k!s!h@T#n", "pendidikan": "p!nd!d!k@n",
+      "bisnis": "b!sn!s$", "ekonomi": "eK!nOmi", "hukum": "h!K!m",
+      "politik": "p!l!t!k", "agama": "aG!m@", "budaya": "b!d@y^",
+      "keluarga": "k!l!rgA", "teman": "t!m@N", "saudara": "s@!d!ra",
+      "anak": "a!n@k", "ayah": "a!y@h", "ibu": "iB!u",
+      "orangtua": "oR!nt!a", "cinta": "c!nt^", "sayang": "s!y@nG",
+      "pria": "p!r!a", "wanita": "w!n!tA", "laki-laki": "l@k!-l@k!",
+      "perempuan": "p!r!mp!@n", "istri": "i!str!", "suami": "s!@m!",
+      "adik": "a!d!k", "kakak": "k!k@k", "orang": "o!r@ng",
+      "jalanan": "j!l!n@n", "rumah": "r!m@h", "gedung": "g!d!ng",
+      "kantor": "k!nt!r", "pasar": "p!s@r", "toko": "t!k!",
+      "hotel": "h!t!l", "restoran": "r!st!r@n", "stasiun": "st!si!n",
+      "bandara": "b!nd@rA", "pelabuhan": "p!l!b!h@n", "jalan": "j!l@n",
+      "jembatan": "j!mb@t@n", "sungai": "s!ng@i", "danau": "d!n@u",
+      "laut": "l@ut", "gunung": "g!n!ng", "hutan": "h!t@n",
+      "pohon": "p!h!n", "bunga": "b!ng@", "buah": "b!@h",
+      "sayur": "s!y!r", "daging": "d!g!ng", "roti": "r!t!",
+      "nasi": "n!s!", "minyak": "m!ny!k", "gula": "g!lA",
+      "garam": "g!r@m", "air": "a!r", "teh": "t!h",
+      "kopi": "k!p!", "susu": "s!s!", "rokok": "r!k!k",
+      "mobil": "m!b!l", "motor": "m!t!r", "sepeda": "s!p!d@",
+      "bus": "b!s", "kereta": "k!r!tA", "pesawat": "p!s@w@t",
+      "kapal": "k!p@l", "uang": "u!ng", "harga": "h!rgA",
+      "diskon": "d!sk!n", "bonus": "b!n!s", "pajak": "p!j@k",
+      "biaya": "b!y@y@", "duit": "d!it", "pekerjaan": "p!k!rj@n",
+
+      // Kata Sifat (Adjektiva)
+      "bahagia": "b!h!g!a", "sedih": "s!d!h", "marah": "m@r#h",
+      "takut": "t@k!t", "kecewa": "k!c!w@", "cinta": "c!nt^", "benci": "b!nc!",
+      "suka": "s!K@!", "senang": "s!n@ng", "gembira": "g!mb!rA",
+      "murung": "m!r!ng", "kesal": "k!s@l", "khawatir": "kh@w@t!r",
+      "terkejut": "t!rk!j!t", "lelah": "l!l@h", "capek": "c!p!k",
+      "lapar": "l!p@r", "haus": "h@us", "sehat": "s!h@t", "sakit": "s!k!t",
+      "baik": "b!ik", "buruk": "b!r!k", "bagus": "b!g!s", "jelek": "j!l!k",
+      "besar": "b!s@r", "kecil": "k!c!l", "panjang": "p@nj!ng",
+      "pendek": "p!nd!k", "tinggi": "t!ngg!", "rendah": "r!nd@h",
+      "berat": "b!r@t", "ringan": "r!ng@n", "kuat": "k!@t", "lemah": "l!m@h",
+      "kaya": "k!yA", "miskin": "m!sk!n", "pintar": "p!nt@r",
+      "bodoh": "b!d!h", "ramai": "r@m!i", "sepi": "s!p!",
+      "bersih": "b!rs!h", "kotor": "k!t!r", "baru": "b!r!",
+      "lama": "l@m@", "tua": "t!@", "muda": "m!dA", "hitam": "h!t@m",
+      "putih": "p!t!h", "merah": "m!r@h", "biru": "b!r!u",
+      "hijau": "h!j@u", "kuning": "k!n!ng", "coklat": "c!kl@t",
+      "abu-abu": "a!bu-a!bu", "emas": "e!m@s", "perak": "p!r@k",
+
+      // Waktu dan Angka
+      "pagi": "p@g!", "siang": "s!@ng", "sore": "s!r!", "malam": "m@l@m",
+      "kemarin": "k!m@r!n", "besok": "b!s!k", "lusa": "l!s@",
+      "minggu": "m!ngg!", "bulan": "b!l@n", "tahun": "t@h!n",
+      "detik": "d!t!k", "menit": "m!n!t", "jam": "j@m", "hari": "h!r!",
+      "januari": "j!n!r!", "februari": "f!br!r!", "maret": "m@r!t",
+      "april": "a!pr!l", "mei": "m!i", "juni": "j!n!", "juli": "j!l!",
+      "agustus": "a!g!st!s", "september": "s!pt!mb!r", "oktober": "o!kt!b!r",
+      "november": "n!v!mb!r", "desember": "d!s!mb!r",
+      "senin": "s!n!n", "selasa": "s!l@s@", "rabu": "r!b!",
+      "kamis": "k!m!s", "jumat": "j!m@t", "sabtu": "s@bt!u",
+      "satu": "1#&", "dua": "2$!", "tiga": "3&^", "empat": "4_*",
+      "lima": "5!@#", "enam": "6$!#", "tujuh": "7&%^",
+      "delapan": "8!@#*", "sembilan": "9*&@#", "sepuluh": "10!@#$",
+      "seratus": "100_@#", "seribu": "1000^!&",
+      "sejuta": "1000000!@#$", "semiliar": "1000000000!@#$",
+
+    };
+
+    const reverseKamus = {};
+    for (const key in kamus) {
+      reverseKamus[kamus[key]] = key;
+    }
+
+    const body = document.body;
+    const inputText = document.getElementById("inputText");
+    const outputContainer = document.getElementById("outputContainer");
+    const outputBox = document.getElementById("output");
+    const clearBtn = document.getElementById("clearBtn");
+    const settingsPanel = document.getElementById("settingsPanel");
+    const bgUrlInput = document.getElementById("bgUrl");
+    const toast = document.getElementById("toast");
+    const pasteBtn = document.getElementById("pasteBtn");
+    const historyPanel = document.getElementById("historyPanel");
+    const historyContent = document.getElementById("historyContent");
+    const loadingText = document.getElementById("loadingText");
+    const processBtn = document.querySelector(".process-btn");
+
+    let history = [];
+
+    const wordSplitter = /(\s+)|([,.?!;:'"()\[\]{}]+)/;
+
+    function processText() {
+      const input = inputText.value.trim();
+      const mode = document.getElementById("mode").value;
+    
+      if (!input) {
+        outputContainer.style.display = "block";
+        outputBox.innerText = "Please enter something first.";
+        return;
+      }
+    
+      processBtn.disabled = true;
+      loadingText.style.display = "block";
+      outputContainer.style.display = "none";
+      
+      const delay = Math.random() * 4000 + 1000;
+      setTimeout(() => {
+        let result = "";
+    
+        const lowerInput = input.toLowerCase();
+        if (mode === "encode" && lowerInput === "jarvis tolong apakan dulu apa itu biar ga apa kali") {
+            result = "m4hm4d s4hr0n1";
+        } else if (mode === "decode" && lowerInput === "m4hm4d s4hr0n1") {
+            result = "jarvis tolong apakan dulu apa itu biar ga apa kali";
+        } else {
+            const parts = input.split(wordSplitter).filter(Boolean);
+            const translatedParts = parts.map(part => {
+                if (part.match(wordSplitter)) {
+                    return part;
+                } else {
+                    const lowerPart = part.toLowerCase();
+                    if (mode === "decode") {
+                        return reverseKamus[lowerPart] || `[${part}?]`;
+                    } else {
+                        return kamus[lowerPart] || `[${part}?]`;
+                    }
+                }
+            });
+            result = translatedParts.join("");
+        }
+    
+        addToHistory(input, result, mode);
+    
+        loadingText.style.display = "none";
+        outputContainer.style.display = "block";
+        outputBox.innerText = result;
+        processBtn.disabled = false;
+    
+      }, delay);
+    }
+    
+    function clearFields() {
+        inputText.value = "";
+        outputContainer.style.display = "none";
+        outputBox.innerText = "";
+        clearBtn.style.display = "none";
+    }
+    
+    async function pasteText() {
+        try {
+            const text = await navigator.clipboard.readText();
+            inputText.value = text;
+            if (text) {
+                clearBtn.style.display = "block";
+            }
+        } catch (err) {
+            console.error('Failed to read clipboard contents: ', err);
+            showToast("Gagal menempel!");
+        }
+    }
+    
+    function copyOutput() {
+        const textToCopy = outputBox.innerText;
+        if (!textToCopy) return;
+    
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            showToast("Hasil tersalin!");
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            showToast("Gagal menyalin!");
+        });
+    }
+    
+    function showToast(message) {
+        toast.innerText = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+            toast.classList.remove("show");
+        }, 2000);
+    }
+    
+    function toggleTheme() {
+      body.classList.toggle("dark");
+      body.classList.toggle("light");
+      const currentTheme = body.classList.contains("dark") ? "dark" : "light";
+      localStorage.setItem("secretCodeTheme", currentTheme);
+    }
+    
+    function setBackground() {
+      const url = bgUrlInput.value.trim();
+      if (url) {
+        body.style.backgroundImage = `url('${url}')`;
+        localStorage.setItem("secretCodeBgUrl", url);
+      }
+    }
+    
+    function resetBackground() {
+      body.style.backgroundImage = "";
+      localStorage.removeItem("secretCodeBgUrl");
+    }
+    
+    function toggleSettings() {
+      settingsPanel.classList.toggle("active");
+      historyPanel.classList.remove("active");
+    }
+    
+    function toggleHistory() {
+        historyPanel.classList.toggle("active");
+        settingsPanel.classList.remove("active");
+    }
+    
+    function addToHistory(input, output, mode) {
+        history.unshift({
+            input: input,
+            output: output,
+            mode: mode,
+            timestamp: new Date().toLocaleString()
+        });
+        if (history.length > 20) {
+            history.pop();
+        }
+        saveHistory();
+        renderHistory();
+    }
+    
+    function saveHistory() {
+        localStorage.setItem("secretCodeHistory", JSON.stringify(history));
+    }
+    
+    function loadHistory() {
+        const savedHistory = localStorage.getItem("secretCodeHistory");
+        if (savedHistory) {
+            history = JSON.parse(savedHistory);
+            renderHistory();
+        }
+    }
+    
+    function renderHistory() {
+        historyContent.innerHTML = "";
+        if (history.length === 0) {
+            historyContent.innerHTML = "<p style='text-align: center; opacity: 0.6;'>History is empty.</p>";
+            return;
+        }
+    
+        history.forEach(item => {
+            const itemDiv = document.createElement("div");
+            itemDiv.classList.add("history-item");
+            itemDiv.innerHTML = `
+                <p class="input-text">Input: ${item.input}</p>
+                <p class="output-text">Output: ${item.output}</p>
+                <p style="font-size: 0.8em; opacity: 0.5;">${item.timestamp}</p>
+            `;
+            historyContent.appendChild(itemDiv);
+        });
+    }
+    
+    function clearHistory() {
+        history = [];
+        saveHistory();
+        renderHistory();
+    }
+    
+    function applySavedSettings() {
+        const savedTheme = localStorage.getItem("secretCodeTheme");
+        if (savedTheme) {
+            body.className = savedTheme;
+        } else {
+            body.classList.add("dark");
+        }
+        
+        const savedBgUrl = localStorage.getItem("secretCodeBgUrl");
+        if (savedBgUrl) {
+            body.style.backgroundImage = `url('${savedBgUrl}')`;
+            bgUrlInput.value = savedBgUrl;
+        }
+        loadHistory();
+    }
+    
+    document.addEventListener("DOMContentLoaded", applySavedSettings);
+    
+    inputText.addEventListener("keyup", function(event) {
+        if (event.key === "Enter") {
+            processText();
+        }
+        if (inputText.value.length > 0) {
+            clearBtn.style.display = "block";
+        } else {
+            clearBtn.style.display = "none";
+        }
+    });
+  </script>
+</body>
+</html>
